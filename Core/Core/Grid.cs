@@ -4,7 +4,7 @@ using System.Linq;
 
 using UnityEngine;
 
-namespace Core {
+namespace BlackRece.Core {
     public interface IGrid<TCell> {
         TCell GetCell(Vector2Int position);
         void SetCell(Vector2Int position, TCell cell);
@@ -26,6 +26,7 @@ namespace Core {
         }
 
         public List<TCell> GetAllCells => _grid.Values.ToList();
+        public List<Vector2Int> GetAllPositions => _grid.Keys.ToList();
 
         public TCell GetCell(Vector2Int position) {
             if (_grid.ContainsKey(position))
@@ -44,7 +45,7 @@ namespace Core {
         }
 
         public List<TCell> GetNeighbours(Vector2Int target) {
-            if (_grid.ContainsKey(target))
+            if (!_grid.ContainsKey(target))
                 throw new IndexOutOfRangeException(
                     $"position ({target}) was outside of grid.");
 

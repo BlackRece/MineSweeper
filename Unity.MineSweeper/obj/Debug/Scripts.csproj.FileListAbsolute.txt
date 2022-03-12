@@ -1,0 +1,4 @@
+D:\Documents\GitHub\MineSweeper\Unity.MineSweeper\obj\Debug\Scripts.csprojAssemblyReference.cache
+D:\Documents\GitHub\MineSweeper\Unity.MineSweeper\obj\Debug\Scripts.csproj.CoreCompileInputs.cache
+D:\Documents\GitHub\MineSweeper\Unity.MineSweeper\obj\Debug\Scripts.dll
+D:\Documents\GitHub\MineSweeper\Unity.MineSweeper\obj\Debug\Scripts.pdb

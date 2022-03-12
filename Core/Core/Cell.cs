@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Core {
+namespace BlackRece.Core {
     public sealed class Cell {
         private bool _isMine;
         public bool IsMine {
