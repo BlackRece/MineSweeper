@@ -53,7 +53,7 @@ namespace BlackRece.MineSweeper {
         public void RevealCell() {
             _bIsRevealed = true;
             
-            gameObject.GetComponent<Renderer>().material.color = Color.grey;
+            gameObject.GetComponent<Renderer>().sharedMaterial.color = Color.grey;
 
             if (_nearbyMines == 0) 
                 // reveal neighbours
