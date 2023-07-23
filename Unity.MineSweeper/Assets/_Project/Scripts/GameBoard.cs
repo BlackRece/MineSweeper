@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using BlackRece.Core;
 
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace BlackRece.MineSweeper {
     public sealed class GameBoard : MonoBehaviour {
@@ -29,10 +31,10 @@ namespace BlackRece.MineSweeper {
             _board = new Board(_size);
 
             RenderGameBoard();
-            
-            _board.SetUp(_mines);
+            SetupMines(_mines);
 
-            GameEvents.evtCellClick += ShowCellOnGrid;
+            GameEvents.EvtMineCount += GetMineCount;
+            GameEvents.EvtCellReveal += RevealNeighbours;
         }
 
         private void RenderGameBoard() {
@@ -46,17 +48,68 @@ namespace BlackRece.MineSweeper {
             }
         }
 
-        private void ShowCellOnGrid(Vector2Int position) {
-            _board.ShowCell(position);
+        // Show cell on grid - called when player clicks on cell
+        private void GetMineCount(Vector2Int position) {
+            _UIBoard[position]
+                .GetComponent<GameCell>()
+                .SetMineCount(GetNeighbourPositions(position).Count);
+        }
+        
+        private void RevealNeighbours(Vector2Int position) {
+            var neighbourPositions = GetNeighbourPositions(position);
+            foreach (var cellPosition in neighbourPositions) {
+                var cell = _UIBoard[cellPosition].GetComponent<GameCell>();
+                if(cell.IsRevealed || cell.HasMine)
+                    continue;
+                
+                cell.SetMineCount(GetNeighbourPositions(cellPosition).Count);
+                cell.RevealCell();
+            }
+        }
 
-            var cell = _UIBoard[position].GetComponent<GameCell>();
-            cell.ShowMineCount();
+        private void SetupMines(int mineAmount) {
+            if (mineAmount > _UIBoard.Count || mineAmount < 0)
+                throw new ArgumentOutOfRangeException(
+                    nameof(mineAmount),
+            "Mine amount is greater than the number of cells");
+
+            var minePositions = new Vector2Int();
+            for(var i = 0; i < mineAmount; i++) {
+                do {
+                    minePositions.x = Random.Range(0, _width);
+                    minePositions.y = Random.Range(0, _height);
+                } while (_UIBoard[minePositions].GetComponent<GameCell>().HasMine);
+
+                _UIBoard[minePositions].GetComponent<GameCell>().SetMine();
+            }
+        }
+
+        private List<Vector2Int> GetNeighbourPositions(Vector2Int position) {
+            var neighbourPositions = new List<Vector2Int> {
+                new Vector2Int(position.x - 1, position.y - 1),
+                new Vector2Int(position.x - 1, position.y),
+                new Vector2Int(position.x - 1, position.y + 1),
+                new Vector2Int(position.x, position.y - 1),
+                new Vector2Int(position.x, position.y + 1),
+                new Vector2Int(position.x + 1, position.y - 1),
+                new Vector2Int(position.x + 1, position.y),
+                new Vector2Int(position.x + 1, position.y + 1)
+            };
+            
+            var validNeighbours = neighbourPositions
+                .Where(neighbourPosition => _UIBoard
+                    .ContainsKey(neighbourPosition))
+                .ToList();
+
+            return validNeighbours;
         }
     }
 
     public sealed class GameEvents : ScriptableObject {
-        public static event Action<Vector2Int> evtCellClick;
+        public static event Action<Vector2Int> EvtMineCount;
+        public static event Action<Vector2Int> EvtCellReveal; 
 
-        public static void OnCellClick(Vector2Int position) => evtCellClick?.Invoke(position);
+        public static void OnMineCount(Vector2Int position) => EvtMineCount?.Invoke(position);
+        public static void OnCellReveal(Vector2Int position) => EvtCellReveal?.Invoke(position);
     }
 }
