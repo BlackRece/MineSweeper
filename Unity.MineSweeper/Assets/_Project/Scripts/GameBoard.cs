@@ -34,7 +34,8 @@ namespace BlackRece.MineSweeper {
             SetupMines(_mines);
 
             GameEvents.EvtMineCount += GetMineCount;
-            GameEvents.EvtCellReveal += RevealNeighbours;
+            GameEvents.EvtRevealCell += RevealNeighbours;
+            GameEvents.EvtRevealMines += RevealMines;
         }
 
         private void RenderGameBoard() {
@@ -49,10 +50,15 @@ namespace BlackRece.MineSweeper {
         }
 
         // Show cell on grid - called when player clicks on cell
-        private void GetMineCount(Vector2Int position) {
-            _UIBoard[position]
-                .GetComponent<GameCell>()
-                .SetMineCount(GetNeighbourPositions(position).Count);
+        private int GetMineCount(Vector2Int position) {
+            var mineCount = 0;
+
+            foreach (var cellPos in GetNeighbourPositions(position)) {
+                if(_UIBoard[cellPos].GetComponent<GameCell>().HasMine)
+                    mineCount++;
+            }
+            
+            return mineCount;
         }
         
         private void RevealNeighbours(Vector2Int position) {
@@ -62,8 +68,16 @@ namespace BlackRece.MineSweeper {
                 if(cell.IsRevealed || cell.HasMine)
                     continue;
                 
-                cell.SetMineCount(GetNeighbourPositions(cellPosition).Count);
+                cell.SetMineCount(GetMineCount(cellPosition));
                 cell.RevealCell();
+            }
+        }
+        
+        private void RevealMines() {
+            foreach (GameObject cellGO in _UIBoard.Values) {
+                var cell = cellGO.GetComponent<GameCell>();
+                if(!cell.HasMine)
+                    cell.RevealCell();
             }
         }
 
@@ -106,10 +120,12 @@ namespace BlackRece.MineSweeper {
     }
 
     public sealed class GameEvents : ScriptableObject {
-        public static event Action<Vector2Int> EvtMineCount;
-        public static event Action<Vector2Int> EvtCellReveal; 
+        public static event Func<Vector2Int, int> EvtMineCount;
+        public static event Action<Vector2Int> EvtRevealCell; 
+        public static event Action EvtRevealMines;
 
-        public static void OnMineCount(Vector2Int position) => EvtMineCount?.Invoke(position);
-        public static void OnCellReveal(Vector2Int position) => EvtCellReveal?.Invoke(position);
+        public static int OnMineCount(Vector2Int position) => EvtMineCount?.Invoke(position) ?? 0;
+        public static void OnRevealCell(Vector2Int position) => EvtRevealCell?.Invoke(position);
+        public static void OnRevealMines() => EvtRevealMines?.Invoke();
     }
 }

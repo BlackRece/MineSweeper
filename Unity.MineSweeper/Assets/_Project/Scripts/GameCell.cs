@@ -42,7 +42,7 @@ namespace BlackRece.MineSweeper {
                 return;
             
             // get mine count
-            GameEvents.OnMineCount(_boardPosition);
+            _nearbyMines = GameEvents.OnMineCount(_boardPosition);
             
             if (_bHasMine) 
                 ShowMine();
@@ -57,7 +57,7 @@ namespace BlackRece.MineSweeper {
 
             if (_nearbyMines == 0) 
                 // reveal neighbours
-                GameEvents.OnCellReveal(_boardPosition);
+                GameEvents.OnRevealCell(_boardPosition);
             else
                 ShowCount();
         }
@@ -66,6 +66,8 @@ namespace BlackRece.MineSweeper {
             _label.gameObject.SetActive(_bHasMine);
             _label.text = "*";
             _label.color = _black;
+            
+            GameEvents.OnRevealMines();
         }
         
         private void ShowCount() {
