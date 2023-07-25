@@ -43,6 +43,7 @@
   <ItemGroup>
      <Compile Include="Assets\_Project\Scripts\GameCell.cs" />
      <Compile Include="Assets\_Project\Scripts\GameBoard.cs" />
+     <Compile Include="Assets\_Project\Scripts\GameEvents.cs" />
      <Reference Include="UnityEngine">
      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.11f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\Variations\mono\Managed\UnityEngine.dll</HintPath>
      </Reference>

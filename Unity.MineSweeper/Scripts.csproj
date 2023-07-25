@@ -43,6 +43,7 @@
   <ItemGroup>
      <Compile Include="Assets\_Project\Scripts\GameCell.cs" />
      <Compile Include="Assets\_Project\Scripts\GameBoard.cs" />
+     <Compile Include="Assets\_Project\Scripts\GameEvents.cs" />
      <Folder Include="Assets\_Project\Scripts" />
      <None Include="Assets\_Project\Scripts\Scripts.asmdef" />
      <Reference Include="UnityEngine">
