@@ -1,9 +1,4 @@
-# MineSweeper - Coding Challenge 
-Idea came from The Coding Train's Coding Challenge #71 (video: https://www.youtube.com/watch?v=LFU5ZlrR21E)
-
 # MineSweeper - Coding Challenge
-
-![MineSweeper](minesweeper_demo.gif)
 
 This repository contains my implementation of the classic game Minesweeper as part of a coding challenge. The idea for this project came from The Coding Train's Coding Challenge #71. You can watch the video [here](https://www.youtube.com/watch?v=LFU5ZlrR21E) to see the original challenge.
 
@@ -41,27 +36,37 @@ To run the Minesweeper game, you need to have Unity installed on your system. Un
 
 The repository is structured as follows:
 
-- `Assets`: Contains all the Unity assets for the Minesweeper project.
-- `Scripts`: Contains the C# scripts used to implement the game logic.
-- `Scenes`: Contains the Unity scenes, and the main scene where the Minesweeper game is implemented.
+- `Unity.MineSweeper`: The Unity project folder.
+  - `Assets`: Contains all the Unity assets for the Minesweeper project.
+  - `_Project`: Contains project specific assets.
+    - `Prefabs`: Contains the Unity prefabs used in the project.
+    - `Scripts`: Contains the C# scripts used to implement the game logic.
+    - `Tests`: Contains the Unity/NUnit tests used to test the game logic.
+  - `Plugins`: Contains the Unity plugins used in the project.
+  - `Scenes`: Contains the Unity scenes, and the main scene where the Minesweeper game is implemented.
+- `LICENSE.md`: The license file for the project.
 - `README.md`: This file you are currently reading.
 
 ## Acknowledgments
 
 This implementation was inspired by The Coding Train's Coding Challenge #71 on Minesweeper. Special thanks to Daniel Shiffman for creating the challenge and providing the inspiration for this project.
 
+I would also like to acknowledge Jason Storey and his YouTube videos on Assembly Definitions and building dlls externally. You can find his videos [here](https://www.youtube.com/@JasonStorey).
+
+
 ## Contributing
 
 If you find any issues or have ideas for improvements, feel free to open an issue or create a pull request. Contributions are always welcome!
 
-## License
+## License & Copyright
 
-This project is licensed under the [MIT License](LICENSE.md).
+This project is licensed under the [MS-RL License](LICENSE).<br>
+© BlackRece 2023 ([BlackRece@gmail.com](mailto:blackrece@gmail.com))
 
 ---
 
 Enjoy playing Minesweeper and happy coding! If you have any questions or need assistance, feel free to reach out.
 
-**Author:** Your Name
-**Contact:** your.email@example.com
-**Project Link:** [https://github.com/your-username/minesweeper](https://github.com/your-username/minesweeper)
+**Author:** Maurice Thompson-Hamilton<br>
+**Contact:** blackrece@gmail.com<br>
+**Project Link:** [https://github.com/BlackRece/MineSweeper](https://github.com/BlackRece/MineSweeper)
