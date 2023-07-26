@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 
 using BlackRece.MineSweeper;
 
@@ -21,12 +20,6 @@ namespace GivenAGameCell {
             _gameCell.SetMine();
         }
         
-        // A Test behaves as an ordinary method
-        [Test]
-        public void GivenAGameCellSimplePasses() {
-            // Use the Assert class to test conditions
-        }
-
         [Test]
         public void ThenHasMineReturnsTrue() {
             Assert.IsTrue(_gameCell.HasMine);
@@ -42,13 +35,6 @@ namespace GivenAGameCell {
             Assert.AreEqual(0, _gameCell.MineCount);
         }
         
-        [TearDown]
-        public void Teardown() {
-            Object.DestroyImmediate(_cellGameObject);
-        }
-
-        // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
-        // `yield return null;` to skip a frame.
         [UnityTest]
         public IEnumerator ThenRevealMinesEventIsRaised() {
             /*
@@ -77,6 +63,11 @@ namespace GivenAGameCell {
             */
             Assert.True(true);
             yield return null;
+        }
+        
+        [TearDown]
+        public void Teardown() {
+            Object.DestroyImmediate(_cellGameObject);
         }
     }
 }
