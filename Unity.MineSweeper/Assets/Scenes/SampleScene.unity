@@ -246,10 +246,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca6a252bf1e6f744d8c0e337b6f86069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cellPrefab: {fileID: 2819719698474666630, guid: 2ab7a950f83f34e43839c51254a3dbc9, type: 3}
+  _cellPrefab: {fileID: 5640944349466444431, guid: 8e30232b7f4477f4292c67a87854b787, type: 3}
+  _minePrefab: {fileID: 9125763383265661137, guid: c260c2d34f20a7e4dbf93d91c57881b2, type: 3}
   _width: 10
   _height: 10
-  _mines: 10
+  _mines: 20
 --- !u!4 &829705438
 Transform:
   m_ObjectHideFlags: 0

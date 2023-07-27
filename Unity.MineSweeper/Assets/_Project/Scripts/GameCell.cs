@@ -35,6 +35,7 @@ namespace BlackRece.MineSweeper {
             _bIsRevealed = false;
             _bHasMine = false;
             _nearbyMines = 0;
+            _label.gameObject.SetActive(false);
         }
 
         private void OnMouseDown() {
@@ -53,7 +54,7 @@ namespace BlackRece.MineSweeper {
         public void RevealCell() {
             _bIsRevealed = true;
             
-            gameObject.GetComponent<Renderer>().sharedMaterial.color = Color.grey;
+            gameObject.GetComponent<Renderer>().material.color = Color.grey;
 
             if (_nearbyMines == 0) 
                 // reveal neighbours

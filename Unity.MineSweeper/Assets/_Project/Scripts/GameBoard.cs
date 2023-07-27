@@ -10,6 +10,7 @@ using Random = UnityEngine.Random;
 namespace BlackRece.MineSweeper {
     public sealed class GameBoard : MonoBehaviour {
         [SerializeField] private GameObject _cellPrefab = null;
+        [SerializeField] private GameObject _minePrefab = null;
         
         [SerializeField] [Range(10, 500)] private int _width, _height; 
         private IntSize _size = null;

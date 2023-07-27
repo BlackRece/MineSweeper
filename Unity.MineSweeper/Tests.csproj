@@ -42,9 +42,9 @@
   </PropertyGroup>
   <ItemGroup>
      <Compile Include="Assets\_Project\Tests\TestTemplate.cs" />
+     <Compile Include="Assets\_Project\Tests\GameEvents\WhenTheMineCountEventIsTriggered.cs" />
      <Compile Include="Assets\_Project\Tests\GameCell\WhenCellContainsAMine.cs" />
      <Compile Include="Assets\_Project\Tests\GameCell\WhenCellIsEmpty.cs" />
-     <Compile Include="Assets\_Project\Tests\GameEvents\WhenTheMineCountEventIsTriggered.cs" />
      <Folder Include="Assets\_Project\Tests" />
      <Folder Include="Assets\_Project\Tests\GameCell" />
      <Folder Include="Assets\_Project\Tests\GameEvents" />
