@@ -87,7 +87,7 @@ namespace BlackRece.MineSweeper {
             var neighbourPositions = GetNeighbourPositions(position);
             foreach (var cellPosition in neighbourPositions) {
                 var cell = _UIBoard[cellPosition].GetComponent<GameCell>();
-                if(cell.IsRevealed || cell.HasMine)
+                if(cell.IsRevealed || cell.HasMine || cell.IsFlagged)
                     continue;
                 
                 cell.SetMineCount(GetMineCount(cellPosition));

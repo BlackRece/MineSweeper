@@ -109,6 +109,9 @@ namespace BlackRece.MineSweeper {
         }
 
         public void ToggleFlag() {
+            if(_bIsRevealed)
+                return;
+            
             _bIsFlagged = !_bIsFlagged;
             //var cellPos = cellBoardPosition;
             gameObject.GetComponent<Renderer>().material.color = 
