@@ -43,6 +43,7 @@
   <ItemGroup>
      <Compile Include="Assets\_Project\Tests\TestTemplate.cs" />
      <Compile Include="Assets\_Project\Tests\GameEvents\WhenTheMineCountEventIsTriggered.cs" />
+     <Compile Include="Assets\_Project\Tests\GameCell\WhenCellIsFlagged.cs" />
      <Compile Include="Assets\_Project\Tests\GameCell\WhenCellContainsAMine.cs" />
      <Compile Include="Assets\_Project\Tests\GameCell\WhenCellIsEmpty.cs" />
      <Folder Include="Assets\_Project\Tests" />

@@ -20,10 +20,16 @@ namespace BlackRece.MineSweeper {
         private Board _board;
         private Dictionary<Vector2Int, GameObject> _UIBoard;
 
+        private float _clickDelay;
+        private float _clickTimer;
+        
         private void Awake() {
             _size = new IntSize(_width, _height);
             _UIBoard = new Dictionary<Vector2Int, GameObject>();
 
+            _clickDelay = 0.1f;
+            _clickTimer = 0f;
+            
             if (_cellPrefab == null)
                 throw new ArgumentNullException(nameof(_cellPrefab),"Missing Cell prefab");
         }
@@ -37,6 +43,21 @@ namespace BlackRece.MineSweeper {
             GameEvents.EvtMineCount += GetMineCount;
             GameEvents.EvtRevealCell += RevealNeighbours;
             GameEvents.EvtRevealMines += RevealMines;
+            GameEvents.EvtFlagCell += ToggleFlag;
+        }
+
+        private void Update() {
+            if(_clickTimer > 0f)
+                _clickTimer -= Time.deltaTime;
+        }
+
+        private void ToggleFlag(Vector2Int obj) {
+            if(_clickTimer > 0f)
+                return;
+
+            _clickTimer = _clickDelay;
+            _UIBoard[obj].GetComponent<GameCell>()
+                .ToggleFlag();
         }
 
         private void RenderGameBoard() {

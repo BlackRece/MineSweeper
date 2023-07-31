@@ -250,7 +250,7 @@ MonoBehaviour:
   _minePrefab: {fileID: 9125763383265661137, guid: c260c2d34f20a7e4dbf93d91c57881b2, type: 3}
   _width: 10
   _height: 10
-  _mines: 20
+  _mines: 1
 --- !u!4 &829705438
 Transform:
   m_ObjectHideFlags: 0
