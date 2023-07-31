@@ -120,6 +120,14 @@ namespace BlackRece.MineSweeper {
             }
         }
 
+        public void Reset() {
+            foreach (var cellGO in _UIBoard.Values) {
+                cellGO.GetComponent<GameCell>().Reset();
+            }
+            
+            SetupMines(_mines);
+        }
+
         private List<Vector2Int> GetNeighbourPositions(Vector2Int position) {
             var neighbourPositions = new List<Vector2Int> {
                 new Vector2Int(position.x - 1, position.y - 1),

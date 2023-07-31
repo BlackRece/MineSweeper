@@ -27,6 +27,7 @@ namespace BlackRece.MineSweeper {
         public bool IsRevealed => _bIsRevealed;
 
         private bool _bHasMine;
+        private Renderer _renderer;
         public bool HasMine => _bHasMine;
         
         public void SetMine() => _bHasMine = true;
@@ -36,24 +37,14 @@ namespace BlackRece.MineSweeper {
         public void SetMineCount(int mineCount) => _nearbyMines = mineCount;
 
         private void Awake() {
-            _bIsRevealed = false;
-            _bHasMine = false;
-            _nearbyMines = 0;
-            _label.gameObject.SetActive(false);
+            _renderer = gameObject.GetComponent<Renderer>();
+            
+            Reset();
         }
 
         private void Update() {
-            // if cel is right clicked, toggle flag 
-            if (Input.GetMouseButtonDown(1)) {
+            if (Input.GetMouseButtonDown(1)) 
                 OnRightMouseButtonDown();
-                /*
-                if(_bIsRevealed)
-                    return;
-                
-                SetFlag();
-                ShowFlag();
-            */
-            }
         }
 
         private void OnMouseDown() {
@@ -75,17 +66,14 @@ namespace BlackRece.MineSweeper {
             if (!Physics.Raycast(ray, out var hit))
                 return;
             
-            if (hit.collider.gameObject.TryGetComponent<GameCell>(out var cell)) {
-                var cellPos = cell.BoardPosition;
-                //cell.TogglerFlag();
-                GameEvents.OnFlagCell(cellPos);
-            }
+            if (hit.collider.gameObject.TryGetComponent<GameCell>(out var cell))
+                GameEvents.OnFlagCell(cell.BoardPosition);
         }
 
         public void RevealCell() {
             _bIsRevealed = true;
             
-            gameObject.GetComponent<Renderer>().material.color = Color.grey;
+            _renderer.material.color = Color.grey;
 
             if (_nearbyMines == 0) 
                 // reveal neighbours
@@ -113,13 +101,21 @@ namespace BlackRece.MineSweeper {
                 return;
             
             _bIsFlagged = !_bIsFlagged;
-            //var cellPos = cellBoardPosition;
-            gameObject.GetComponent<Renderer>().material.color = 
-                _bIsFlagged ? Color.cyan : Color.white;
+            
+            _renderer.material.color = _bIsFlagged ? Color.cyan : Color.white;
             
             _label.gameObject.SetActive(_bIsFlagged);
             _label.color = Color.blue;
             _label.text = _bIsFlagged ? "?" : "";
+        }
+
+        public void Reset() {
+            _bIsRevealed = false;
+            _bIsFlagged = false;
+            _bHasMine = false;
+            _nearbyMines = 0;
+            _label.gameObject.SetActive(false);
+            _renderer.material.color = Color.white;
         }
     }
 }
