@@ -4,7 +4,11 @@ using System.Linq;
 
 using BlackRece.Core;
 
+using TMPro;
+
 using UnityEngine;
+using UnityEngine.UI;
+
 using Random = UnityEngine.Random;
 
 namespace BlackRece.MineSweeper {
@@ -14,6 +18,9 @@ namespace BlackRece.MineSweeper {
         
         [SerializeField] [Range(10, 500)] private int _width, _height; 
         private IntSize _size = null;
+        
+        [SerializeField] private TMP_InputField _mineCountInput = null;
+        [SerializeField] private Slider _mineCountSlider = null;
 
         [SerializeField] private int _mines;
         
@@ -36,6 +43,8 @@ namespace BlackRece.MineSweeper {
 
         private void Start() {
             _board = new Board(_size);
+            
+            _mineCountInput.text = _mines.ToString();
 
             RenderGameBoard();
             SetupMines(_mines);
@@ -44,6 +53,7 @@ namespace BlackRece.MineSweeper {
             GameEvents.EvtRevealCell += RevealNeighbours;
             GameEvents.EvtRevealMines += RevealMines;
             GameEvents.EvtFlagCell += ToggleFlag;
+            GameEvents.EvtResetBoard += ResetBoard;
         }
 
         private void Update() {
@@ -120,7 +130,7 @@ namespace BlackRece.MineSweeper {
             }
         }
 
-        public void Reset() {
+        public void ResetBoard() {
             foreach (var cellGO in _UIBoard.Values) {
                 cellGO.GetComponent<GameCell>().Reset();
             }
@@ -146,6 +156,24 @@ namespace BlackRece.MineSweeper {
                 .ToList();
 
             return validNeighbours;
+        }
+
+        private void UI_MineCount(int mineCount) {
+            _mines = mineCount < 1 || mineCount >= _UIBoard.Count 
+                ? _mines 
+                : mineCount;
+            
+            _mineCountInput.text = _mines.ToString();
+            _mineCountSlider.value = _mines;
+        }
+        
+        public void UI_MineInput(string mineCount) {
+            if (int.TryParse(mineCount, out var mineAmount)) 
+                UI_MineCount(mineAmount);
+        }
+        
+        public void UI_MineSlider(float mineCount) {
+            UI_MineCount((int)mineCount);
         }
     }
 }

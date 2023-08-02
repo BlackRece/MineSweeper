@@ -51,6 +51,7 @@ namespace BlackRece.MineSweeper {
             if(_bIsRevealed || _bIsFlagged)
                 return;
             
+            
             // get mine count
             _nearbyMines = GameEvents.OnMineCount(_boardPosition);
             

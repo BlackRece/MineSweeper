@@ -213,7 +213,19 @@ MonoBehaviour:
   m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 829705437}
+        m_TargetAssemblyTypeName: BlackRece.MineSweeper.GameBoard, Scripts
+        m_MethodName: UI_MineSlider
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &77856098
 GameObject:
   m_ObjectHideFlags: 0
@@ -850,6 +862,8 @@ MonoBehaviour:
   _minePrefab: {fileID: 9125763383265661137, guid: c260c2d34f20a7e4dbf93d91c57881b2, type: 3}
   _width: 10
   _height: 10
+  _mineCountInput: {fileID: 1493512033}
+  _mineCountSlider: {fileID: 17416541}
   _mines: 1
 --- !u!4 &829705438
 Transform:
@@ -1145,7 +1159,19 @@ MonoBehaviour:
       m_Calls: []
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 829705437}
+        m_TargetAssemblyTypeName: BlackRece.MineSweeper.GameBoard, Scripts
+        m_MethodName: UI_MineInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnTouchScreenKeyboardStatusChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1657,7 +1683,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 829705437}
         m_TargetAssemblyTypeName: BlackRece.MineSweeper.GameBoard, Scripts
-        m_MethodName: Reset
+        m_MethodName: ResetBoard
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
