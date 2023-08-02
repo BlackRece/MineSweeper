@@ -77,7 +77,8 @@ namespace BlackRece.MineSweeper {
             UI_DisplayGameState();
 
             // TODO: Expensive, but works. Find a better way to do this
-            CheckBoard();
+            if(_gameState == GameState.Playing)
+                CheckBoard();
         }
 
         private void ToggleFlag(Vector2Int obj) {
