@@ -13,19 +13,29 @@ using Random = UnityEngine.Random;
 
 namespace BlackRece.MineSweeper {
     public sealed class GameBoard : MonoBehaviour {
+        // game state enum
+        private enum GameState {
+            Playing = 0,
+            Won = 1,
+            Lost = 2
+        }
+        
         [SerializeField] private GameObject _cellPrefab = null;
         [SerializeField] private GameObject _minePrefab = null;
         
         [SerializeField] [Range(10, 500)] private int _width, _height; 
         private IntSize _size = null;
         
+        // TODO: move to a UI class
         [SerializeField] private TMP_InputField _mineCountInput = null;
         [SerializeField] private Slider _mineCountSlider = null;
+        [SerializeField] private TMP_Text _gameStateText = null;
 
         [SerializeField] private int _mines;
         
         private Board _board;
         private Dictionary<Vector2Int, GameObject> _UIBoard;
+        private GameState _gameState;
 
         private float _clickDelay;
         private float _clickTimer;
@@ -39,6 +49,8 @@ namespace BlackRece.MineSweeper {
             
             if (_cellPrefab == null)
                 throw new ArgumentNullException(nameof(_cellPrefab),"Missing Cell prefab");
+            
+            _gameStateText.gameObject.SetActive(false);
         }
 
         private void Start() {
@@ -48,6 +60,8 @@ namespace BlackRece.MineSweeper {
 
             RenderGameBoard();
             SetupMines(_mines);
+            
+            _gameState = GameState.Playing;
 
             GameEvents.EvtMineCount += GetMineCount;
             GameEvents.EvtRevealCell += RevealNeighbours;
@@ -59,6 +73,11 @@ namespace BlackRece.MineSweeper {
         private void Update() {
             if(_clickTimer > 0f)
                 _clickTimer -= Time.deltaTime;
+            
+            UI_DisplayGameState();
+
+            // TODO: Expensive, but works. Find a better way to do this
+            CheckBoard();
         }
 
         private void ToggleFlag(Vector2Int obj) {
@@ -105,12 +124,24 @@ namespace BlackRece.MineSweeper {
             }
         }
         
+        private void CheckBoard() {
+            var unrevealedCells = _UIBoard.Values
+                .Select(cell => cell.GetComponent<GameCell>())
+                .Where(cell => !cell.IsRevealed)
+                .ToList();
+
+            if (unrevealedCells.Count == _mines) 
+                _gameState = GameState.Won;
+        }
+        
         private void RevealMines() {
             foreach (GameObject cellGO in _UIBoard.Values) {
                 var cell = cellGO.GetComponent<GameCell>();
                 if(!cell.HasMine)
                     cell.RevealCell();
             }
+            
+            _gameState = GameState.Lost;
         }
 
         private void SetupMines(int mineAmount) {
@@ -136,6 +167,7 @@ namespace BlackRece.MineSweeper {
             }
             
             SetupMines(_mines);
+            _gameState = GameState.Playing;
         }
 
         private List<Vector2Int> GetNeighbourPositions(Vector2Int position) {
@@ -158,6 +190,7 @@ namespace BlackRece.MineSweeper {
             return validNeighbours;
         }
 
+        // TODO: move to a UI class
         private void UI_MineCount(int mineCount) {
             _mines = mineCount < 1 || mineCount >= _UIBoard.Count 
                 ? _mines 
@@ -174,6 +207,22 @@ namespace BlackRece.MineSweeper {
         
         public void UI_MineSlider(float mineCount) {
             UI_MineCount((int)mineCount);
+        }
+
+        private void UI_DisplayGameState() {
+            _gameStateText.gameObject.SetActive(_gameState != GameState.Playing);
+            
+            switch (_gameState) {
+                case GameState.Won:
+                    _gameStateText.text = "You Win!";
+                    break;
+                case GameState.Lost:
+                    _gameStateText.text = "You Lose!";
+                    break;
+                default:
+                    _gameStateText.text = "";
+                    break;
+            }
         }
     }
 }
