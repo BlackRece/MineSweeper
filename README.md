@@ -1,5 +1,7 @@
 # MineSweeper - Coding Challenge
 
+[![MineSweeper on YouTube](https://img.shields.io/badge/Watch%20on%20YouTube-Red?style=for-the-badge&logo=youtube)](https://www.youtube.com/watch?v=isvWfsdSAq4)
+
 This repository contains my implementation of the classic game Minesweeper as part of a coding challenge. The idea for this project came from The Coding Train's Coding Challenge #71. You can watch the video [here](https://www.youtube.com/watch?v=LFU5ZlrR21E) to see the original challenge.
 
 ## Introduction
