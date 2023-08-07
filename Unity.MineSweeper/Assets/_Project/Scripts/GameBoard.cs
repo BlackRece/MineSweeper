@@ -32,9 +32,11 @@ namespace BlackRece.MineSweeper {
         [SerializeField] private TMP_Text _gameStateText = null;
 
         [SerializeField] private int _mines;
+        private const int MAX_MINES = 100;
         
         private Board _board;
-        private Dictionary<Vector2Int, GameObject> _UIBoard;
+        private Dictionary<Vector2Int, GameObject> _boardGOs;
+        private Dictionary<Vector2Int, GameObject> _mineGOs;
         private GameState _gameState;
 
         private float _clickDelay;
@@ -42,7 +44,8 @@ namespace BlackRece.MineSweeper {
         
         private void Awake() {
             _size = new IntSize(_width, _height);
-            _UIBoard = new Dictionary<Vector2Int, GameObject>();
+            _boardGOs = new Dictionary<Vector2Int, GameObject>();
+            _mineGOs = new Dictionary<Vector2Int, GameObject>();
 
             _clickDelay = 0.1f;
             _clickTimer = 0f;
@@ -80,24 +83,33 @@ namespace BlackRece.MineSweeper {
             if(_gameState == GameState.Playing)
                 CheckBoard();
         }
-
+        
         private void ToggleFlag(Vector2Int obj) {
             if(_clickTimer > 0f)
                 return;
 
             _clickTimer = _clickDelay;
-            _UIBoard[obj].GetComponent<GameCell>()
+            _boardGOs[obj].GetComponent<GameCell>()
                 .ToggleFlag();
         }
 
         private void RenderGameBoard() {
-            foreach (var boardPosition in _board.GetCellPositions) {
+            foreach (Vector2Int boardPosition in _board.GetCellPositions) {
+                var gamePosition = new Vector3(boardPosition.x, 0f, boardPosition.y);
+                
                 var cellGO = Instantiate(_cellPrefab, transform);
-                cellGO.transform.position = new Vector3(boardPosition.x, 0f, boardPosition.y);
-                _UIBoard.Add(boardPosition, cellGO);
-
+                cellGO.transform.position = gamePosition;
+                _boardGOs.Add(boardPosition, cellGO);
+                
                 var cell = cellGO.GetComponent<GameCell>();
                 cell.SetBoardPosition(boardPosition);
+
+                if (!_mineGOs.ContainsKey(boardPosition)) {
+                    var mineGO = Instantiate(_minePrefab, transform);
+                    mineGO.transform.position = gamePosition;
+                    _mineGOs.Add(boardPosition, mineGO);
+                }
+                _mineGOs[boardPosition].SetActive(false);
             }
         }
 
@@ -106,7 +118,7 @@ namespace BlackRece.MineSweeper {
             var mineCount = 0;
 
             foreach (var cellPos in GetNeighbourPositions(position)) {
-                if(_UIBoard[cellPos].GetComponent<GameCell>().HasMine)
+                if(_boardGOs[cellPos].GetComponent<GameCell>().HasMine)
                     mineCount++;
             }
             
@@ -116,7 +128,7 @@ namespace BlackRece.MineSweeper {
         private void RevealNeighbours(Vector2Int position) {
             var neighbourPositions = GetNeighbourPositions(position);
             foreach (var cellPosition in neighbourPositions) {
-                var cell = _UIBoard[cellPosition].GetComponent<GameCell>();
+                var cell = _boardGOs[cellPosition].GetComponent<GameCell>();
                 if(cell.IsRevealed || cell.HasMine || cell.IsFlagged)
                     continue;
                 
@@ -126,7 +138,7 @@ namespace BlackRece.MineSweeper {
         }
         
         private void CheckBoard() {
-            var unrevealedCells = _UIBoard.Values
+            var unrevealedCells = _boardGOs.Values
                 .Select(cell => cell.GetComponent<GameCell>())
                 .Where(cell => !cell.IsRevealed)
                 .ToList();
@@ -136,37 +148,46 @@ namespace BlackRece.MineSweeper {
         }
         
         private void RevealMines() {
-            foreach (GameObject cellGO in _UIBoard.Values) {
+            foreach (GameObject cellGO in _boardGOs.Values) {
                 var cell = cellGO.GetComponent<GameCell>();
-                if(!cell.HasMine)
-                    cell.RevealCell();
+                if(cell.HasMine) {
+                    cellGO.SetActive(false);
+                    _mineGOs[cell.BoardPosition].SetActive(true);
+                    continue;
+                }
+                
+                cell.RevealCell();
             }
             
             _gameState = GameState.Lost;
         }
 
         private void SetupMines(int mineAmount) {
-            if (mineAmount > _UIBoard.Count || mineAmount < 0)
+            if (mineAmount > _boardGOs.Count || mineAmount < 0)
                 throw new ArgumentOutOfRangeException(
                     nameof(mineAmount),
             "Mine amount is greater than the number of cells");
 
+            foreach (GameObject mineGO in _mineGOs.Values) 
+                mineGO.SetActive(false);
+            
             var minePositions = new Vector2Int();
             for(var i = 0; i < mineAmount; i++) {
                 do {
                     minePositions.x = Random.Range(0, _width);
                     minePositions.y = Random.Range(0, _height);
-                } while (_UIBoard[minePositions].GetComponent<GameCell>().HasMine);
+                } while (_boardGOs[minePositions].GetComponent<GameCell>().HasMine);
 
-                _UIBoard[minePositions].GetComponent<GameCell>().SetMine();
+                _boardGOs[minePositions].GetComponent<GameCell>().SetMine();
             }
         }
 
         public void ResetBoard() {
-            foreach (var cellGO in _UIBoard.Values) {
+            foreach (var cellGO in _boardGOs.Values) {
                 cellGO.GetComponent<GameCell>().Reset();
+                cellGO.SetActive(true);
             }
-            
+
             SetupMines(_mines);
             _gameState = GameState.Playing;
         }
@@ -184,7 +205,7 @@ namespace BlackRece.MineSweeper {
             };
             
             var validNeighbours = neighbourPositions
-                .Where(neighbourPosition => _UIBoard
+                .Where(neighbourPosition => _boardGOs
                     .ContainsKey(neighbourPosition))
                 .ToList();
 
@@ -193,7 +214,7 @@ namespace BlackRece.MineSweeper {
 
         // TODO: move to a UI class
         private void UI_MineCount(int mineCount) {
-            _mines = mineCount < 1 || mineCount >= _UIBoard.Count 
+            _mines = mineCount < 1 || mineCount >= _boardGOs.Count 
                 ? _mines 
                 : mineCount;
             
